@@ -124,34 +124,19 @@ console.log( 'The total number of transactions is:', totalTransactions );
 // --------------------------------------------------
 // QUESTION 01
 // --------------------------------------------------
-/*
-  Calculate the total number of 'sales'.
 
-  HINT(S):
-  - Not all transactions are 'sales'.
-*/
-var numSales;
+function typeOfSales(array, type) {
+  if (array.type === type) {
+  return array
+  }
+}
 
-/*
-  Hey, welcome to the first question!
+var numSales = transactions.filter(function (array) {
+  return typeOfSales(array, 'sale')
+});
 
-  Here's a breakdown of the question, and some pointers on how to get started!
-    - A variable has been declared a few lines above (`numSales`).
-    - Just below, the contents of the `numSales` variable are logged to the console.
-    - Your job is to assign the variable to the correct value (in this case: the total number of sales) *BEFORE* it is logged out.
-    - You can do this by:
-      - Adding an `=` sign (we are *assigning* something after all)
-      - Starting with the `transactions` variable (see the example question);
-      - Adding one or more methods to transform/extract the value we're looking for.
-      - If your solution is correct, `numSales` should be equal to 5.
 
-  You can solve the remaining questions in the same way!
-
-  P.S.
-  The breakdown above takes up a lot of space, feel free to move it to the top or bottom of the file!
-*/
-
-console.log( 'The total number of sales is:', numSales );
+console.log( 'The total number of sales is:', numSales.length );
 
 
 // --------------------------------------------------
@@ -160,9 +145,11 @@ console.log( 'The total number of sales is:', numSales );
 /*
   Calculate the total number of 'purchases'.
 */
-var numPurchases;
+var numPurchases = transactions.filter(function (array) {
+  return typeOfSales(array, 'purchase')
+});
 
-console.log( 'The total number of purchases is:', numPurchases );
+console.log( 'The total number of purchases is:', numPurchases.length );
 
 
 // --------------------------------------------------
@@ -174,7 +161,17 @@ console.log( 'The total number of purchases is:', numPurchases );
   HINT(S):
   - Don't forget that 'purchases' can also be made in 'cash'!
 */
-var numCashSales;
+
+
+function typeOfPayment(array, type) {
+  if (array.paymentMethod === type) {
+  return array
+}
+}
+
+var numCashSales = numSales.filter(function (array) {
+  return typeOfPayment(array, 'cash')
+}).length;
 
 console.log( 'The total number of cash sales is:', numCashSales );
 
@@ -188,7 +185,9 @@ console.log( 'The total number of cash sales is:', numCashSales );
   HINT(S):
   - Make sure to exclude any 'sales' made by 'credit'!
 */
-var numCreditPurchases;
+var numCreditPurchases = numPurchases.filter(function (array) {
+  return typeOfPayment(array, 'cash')
+}).length;
 
 console.log( 'The total number of credit purchases is:', numCreditPurchases );
 
@@ -205,7 +204,13 @@ console.log( 'The total number of credit purchases is:', numCreditPurchases );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - This array is allowed to contain duplicate values.
 */
-var allVendors;
+var allVendors = [];
+
+transactions.forEach(function (item) {
+  if (item.vendor && !allVendors.includes(item.vendor)){
+    allVendors.push(item.vendor);
+  }
+})
 
 console.log( 'The vendors are:', allVendors );
 
@@ -222,7 +227,13 @@ console.log( 'The vendors are:', allVendors );
   - The assembled array should be made up of strings, not full `transaction` objects.
   - Make sure that the resulting array *does not* include any duplicates.
 */
-var uniqueCustomers;
+var uniqueCustomers = [];
+
+transactions.forEach(function (item) {
+  if (item.customer && !uniqueCustomers.includes(item.customer)){
+    uniqueCustomers.push(item.customer);
+  }
+})
 
 console.log( 'The unique customers are:', uniqueCustomers );
 
@@ -240,7 +251,13 @@ console.log( 'The unique customers are:', uniqueCustomers );
   - There may be more than 1 'sale' that includes 5 or more items.
   - Individual transactions do not have either `name` or `numItems` properties, we'll have to add them to the output.
 */
-var bigSpenders;
+var bigSpenders = [];
+
+transactions.forEach(function (item) {
+  if (item.items.length >= 5){
+    bigSpenders.push({name: item.customer, numItems: item.items.length});
+  }
+})
 
 console.log( 'The "big spenders" are:', bigSpenders );
 
@@ -254,9 +271,13 @@ console.log( 'The "big spenders" are:', bigSpenders );
   HINT(S):
   - Transactions don't have 'prices', but their 'items' do!
 */
-var sumSales;
+var sumSales = 0;
 
-console.log( 'The sum of all sales is:', sumSales );
+numSales[0].items.forEach(function (item) {
+  sumSales += item.price
+})
+
+console.log( 'The sum of all sales is:', sumSales);
 
 
 // --------------------------------------------------
@@ -270,8 +291,13 @@ console.log( 'The sum of all sales is:', sumSales );
   - Make sure to include 'price' information from *all* purchases.
 */
 
-var sumPurchases;
+var sumPurchases = 0;
 
+numPurchases.forEach(function (item) {
+  item.items.forEach(function (sale) {
+    sumPurchases += sale.price
+  })
+})
 console.log( 'The sum of all purhcases is:', sumPurchases );
 
 
@@ -288,7 +314,13 @@ console.log( 'The sum of all purhcases is:', sumPurchases );
   HINT(S):
   - Unlike 'QUESTION 08' and 'QUESTION 09', here we're interested in both 'sale' and 'purchase' transactions.
 */
-var netProfit;
+var netProfit = 0;
+
+transactions.forEach(function (item) {
+  item.items.forEach(function (sale) {
+    netProfit += sale.price
+  })
+})
 
 console.log( 'The net profit is:', netProfit );
 
